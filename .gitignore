@@ -1,0 +1,8 @@
+# Not tracking the following files:
+
+## Python modules compiled for interpreter
+*.pyc
+
+## Actual Project Data
+*.pickle
+*.dict 
