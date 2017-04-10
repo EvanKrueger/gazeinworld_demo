@@ -2,8 +2,8 @@ from __future__ import division
 import PerformParser as pp
 import pandas as pd
 import numpy as np
-import bokeh.plotting as bkP
-import bokeh.models as bkM
+#import bokeh.plotting as bkP
+#import bokeh.models as bkM
 from scipy import signal as sig
 import catchE1Funs as expFun
 import cv2
@@ -37,7 +37,7 @@ def calcSavitskyGolayVelocity(sessionDict, deriv = 1,polyorder = 2):
     vel = np.sqrt(np.sum(np.power(vel,2),1))
     sessionDict['processed'][('cycSGVel','2D')] = vel
 
-    print 'Added sessionDict[\'processed\'][\'cycSGVel\']'
+    print('Added sessionDict[\'processed\'][\'cycSGVel\']')
     return sessionDict
 
 def calcPursuitGainDuringBlank(sessionDict):
@@ -143,8 +143,8 @@ def calcAngularVel(sessionDict):
     sessionDict['trialInfo'][('cycToBallVelocityAtBallOn','X')]  = sessionDict['processed'][('cycToBallVelocity','X')][ballOnFr].values
     sessionDict['trialInfo'][('cycToBallVelocityAtBallOn','Y')]  = sessionDict['processed'][('cycToBallVelocity','Y')][ballOnFr].values
 
-    print '*** calcAngVelocity(): Added sessionDict[\'processed\'][cycToBallVelocityAtBallOn] ***'
-    print '*** calcAngVelocity(): Added sessionDict[\'processed\'][cycToBallVelocityAtBallOff] ***'
+    print('*** calcAngVelocity(): Added sessionDict[\'processed\'][cycToBallVelocityAtBallOn] ***')
+    print('*** calcAngVelocity(): Added sessionDict[\'processed\'][cycToBallVelocityAtBallOff] ***')
     
     return sessionDict
 
@@ -161,7 +161,7 @@ def calcAngularVelocityComponents(sessionDict, dataColumnName, timeColumnName, o
     angularVel_fr_XYZ = angularDisp_fr_XYZ / sessionDict['processed'][timeColumnName]
 
     sessionDict['processed'][(outColumnName,'2D')] = angularVel_fr_XYZ
-    print '*** calcBallAngularVelocity(): Added sessionDict[\'processed\'][(\'ballAngularVelocity\',\'2D\')] ***'
+    print('*** calcBallAngularVelocity(): Added sessionDict[\'processed\'][(\'ballAngularVelocity\',\'2D\')] ***')
 
     ######################################################################################################
     ######################################################################################################
@@ -201,7 +201,7 @@ def calcAngularVelocityComponents(sessionDict, dataColumnName, timeColumnName, o
     sessionDict['processed'][(outColumnName,'X')] = velX_fr
     sessionDict['processed'][(outColumnName,'Y')] = velY_fr
     
-    print '*** calcAngularVelocity(): Added sessionDict[\'processed\'][(\'' + outColumnName + '] ***'
+    print('*** calcAngularVelocity(): Added sessionDict[\'processed\'][(\'' + outColumnName + '] ***')
 
     return sessionDict
 
@@ -215,7 +215,7 @@ def calcVizardDeltaT(sessionDict):
     deltaTime = deltaTime.fillna(method='bfill', limit=1)
     sessionDict['processed']['vizardDeltaT'] = deltaTime.dt.microseconds / 1000000
 
-    print '*** calcVizardDeltaT(): Added sessionDict[\'processed\'][\'frameTime\'] ***'
+    print('*** calcVizardDeltaT(): Added sessionDict[\'processed\'][\'frameTime\'] ***')
 
     return sessionDict
 
@@ -249,7 +249,7 @@ def calcAngularCalibrationError(sessionDict):
     calibAngle_elAz = np.array([calibHorizAngle_fr,calibVertAngle_fr],dtype=np.float)
 
     angularError = findResidualError(cycAngle_elAz,calibAngle_elAz) / sessionDict['analysisParameters']['numberOfCalibrationPoints']
-    print '*****Residual angular error: *****' + str(angularError) + '*****'
+    print('*****Residual angular error: *****' + str(angularError) + '*****')
 
     sessionDict['analysisParameters']['angularCalibrationError'] = angularError
     return sessionDict
@@ -296,7 +296,7 @@ def calcAngularDisplacementsDuringBlank(sessionDict):
 
     # Remove outliers?
     if( sessionDict['analysisParameters']['outlierThresholdSD'] ):
-        print 'calcAngularDisplacementsDuringBlank(): Removing outlier from gazeDisplacementDuringBlank'
+        print('calcAngularDisplacementsDuringBlank(): Removing outlier from gazeDisplacementDuringBlank')
         sessionDict = removeOutliers(sessionDict, 'gazeDisplacementDuringBlank')
     
     # Calculate gazeBallDisplacementRatio
@@ -317,7 +317,7 @@ def removeOutliers(sessionDict, columnName):
         
         # Prevent double-pruning
         if( columnName in sessionDict['analysisParameters']['removedOutliersFrom']):
-            raise AssertionError, 'Column ' +  ' in trialInfo has already been pruned of outliers'
+            raise AssertionError('Column ' +  ' in trialInfo has already been pruned of outliers')
         else:
             sessionDict['analysisParameters']['removedOutliersFrom'].append(columnName)
             
@@ -435,7 +435,7 @@ def calcUnsignedGazeToBallError(sessionDict,eyeString,upVecString):
 
     sessionDict['processed'][('cycGIWtoBallAngle','2D')] = gazeError_fr
 
-    print 'calcUnsignedGazeToBallError(): Created sessionDict[\'processed\'](\'cycGIWtoBallAngle\',\'2D\')'
+    print('calcUnsignedGazeToBallError(): Created sessionDict[\'processed\'](\'cycGIWtoBallAngle\',\'2D\')')
 
     return sessionDict
 
@@ -539,7 +539,7 @@ def calcGazeToBallError(sessionDict,eyeString,upVecString):
     sessionDict['processed'][(outVarColName,'X_' + upVecString)] = horzError_fr
     sessionDict['processed'][(outVarColName,'Y_' + upVecString)] = vertError_fr
 
-    print 'calcGazeToBallError(): Created sessionDict[\'processed\']' + '[\'' + outVarColName + '\']'
+    print('calcGazeToBallError(): Created sessionDict[\'processed\']' + '[\'' + outVarColName + '\']')
 
     return sessionDict
 
@@ -645,7 +645,7 @@ def calcWorldUpDir(sessionDict):
 
 def calcGIWDirection(sessionDict):
 
-	print 'calcGIWDirectionAndVelocity(): Currently only calculates GIW angle/vel for cyc eye data'
+	print('calcGIWDirectionAndVelocity(): Currently only calculates GIW angle/vel for cyc eye data')
 
 	# cycFiltEyeOnScreen -> filtCycMetricEyeOnScreen
 	tempDF = eyeOnScreenToMetricEyeOnScreen(sessionDict,sessionDict['processed']['cycFiltEyeOnScreen'],'filtCycMetricEyeOnScreen')
@@ -914,7 +914,7 @@ def calcCalibPointMetricEyeOnScreen(sessionDict):
 
     # TODO: I hate creating an empty variable and deleting it later on there should be a better way
     calibPointMetricLocOnScreen_XYZ = np.delete(calibPointMetricLocOnScreen_XYZ, 0, 0)
-    print 'Size of TruePOR array:', calibPointMetricLocOnScreen_XYZ.shape
+    print('Size of TruePOR array:', calibPointMetricLocOnScreen_XYZ.shape)
 
     # Attaching the calculated Values to the CalibDataFrame
 
@@ -1172,7 +1172,7 @@ def eyeOnScreenToMetricEyeOnScreen(sessionDict,dFIn,dataOutColumnLabel):
         z = np.zeros(len(x_pixel))
         averageEyetoScreenDistance = sessionDict['analysisParameters']['averageEyetoScreenDistance'] 
         z = z + averageEyetoScreenDistance
-        print '*** eyeOnScreenToMetricEyeOnScreen(): For Dk2, using [\'analysisParameters\'][\'averageEyetoScreenDistance\']***'
+        print('*** eyeOnScreenToMetricEyeOnScreen(): For Dk2, using [\'analysisParameters\'][\'averageEyetoScreenDistance\']***')
     
     else:
         raise AssertionError('Currently only works for the Oculus DK2')
@@ -1336,11 +1336,11 @@ def loadSessionDict(analysisParameters,startFresh = False,loadProcessed = False)
     if( startFresh is False and loadProcessed is True):
 
         try:
-            print '***loadSessionDict: Loading preprocessed data for ' + str(fileName) + ' ***'
+            print('***loadSessionDict: Loading preprocessed data for ' + str(fileName) + ' ***')
             processedDict = pd.read_pickle(filePath + fileName + '-proc.pickle')
             return processedDict
         except:
-            raise Warning, 'loadProcessedDict: Preprocessed data not available'
+            raise Warning('loadProcessedDict: Preprocessed data not available')
 
     # if loadProcessed failed or not true
     # ..if startFresh is True, load raw data and crunch on that
@@ -1567,7 +1567,7 @@ def createExpCfg(expCfgPathAndName):
 
     """
 
-    print "Loading experiment config file: " + expCfgPathAndName
+    print("Loading experiment config file: " + expCfgPathAndName)
     
     from os import path
     filePath = path.dirname(path.abspath(expCfgPathAndName))
@@ -1578,9 +1578,9 @@ def createExpCfg(expCfgPathAndName):
     validator = Validator()
     expCfgOK = expCfg.validate(validator)
     if expCfgOK == True:
-        print "Experiment config file parsed correctly"
+        print("Experiment config file parsed correctly")
     else:
-        print 'Experiment config file validation failed!'
+        print('Experiment config file validation failed!')
         res = expCfg.validate(validator, preserve_errors=True)
         for entry in flatten_errors(expCfg, res):
         # 1each entry is a tuple
@@ -1592,18 +1592,18 @@ def createExpCfg(expCfgPathAndName):
             section_string = ', '.join(section_list)
             if error == False:
                 error = 'Missing value or section.'
-            print section_string, ' = ', error
+            print(section_string, ' = ', error)
         sys.exit(1)
     if expCfg.has_key('_LOAD_'):
         for ld in expCfg['_LOAD_']['loadList']:
-            print 'Loading: ' + ld + ' as ' + expCfg['_LOAD_'][ld]['cfgFile']
+            print('Loading: ' + ld + ' as ' + expCfg['_LOAD_'][ld]['cfgFile'])
             curCfg = ConfigObj(expCfg['_LOAD_'][ld]['cfgFile'], configspec = expCfg['_LOAD_'][ld]['cfgSpec'], raise_errors = True, file_error = True)
             validator = Validator()
             expCfgOK = curCfg.validate(validator)
             if expCfgOK == True:
-                print "Experiment config file parsed correctly"
+                print("Experiment config file parsed correctly")
             else:
-                print 'Experiment config file validation failed!'
+                print('Experiment config file validation failed!')
                 res = curCfg.validate(validator, preserve_errors=True)
                 for entry in flatten_errors(curCfg, res):
                 # each entry is a tuple
@@ -1615,7 +1615,7 @@ def createExpCfg(expCfgPathAndName):
                     section_string = ', '.join(section_list)
                     if error == False:
                         error = 'Missing value or section.'
-                    print section_string, ' = ', error
+                    print(section_string, ' = ', error)
                 sys.exit(1)
             expCfg.merge(curCfg)
 
@@ -1633,7 +1633,7 @@ def createSysCfg(sysCfgPathAndName):
     
     
 
-    print "Loading system config file: " + sysCfgPathAndName
+    print("Loading system config file: " + sysCfgPathAndName)
 
     # Parse system config file
     from os import path
@@ -1645,9 +1645,9 @@ def createSysCfg(sysCfgPathAndName):
     sysCfgOK = sysCfg.validate(validator)
 
     if sysCfgOK == True:
-        print "System config file parsed correctly"
+        print("System config file parsed correctly")
     else:
-        print 'System config file validation failed!'
+        print('System config file validation failed!')
         res = sysCfg.validate(validator, preserve_errors=True)
         for entry in flatten_errors(sysCfg, res):
         # each entry is a tuple
@@ -1659,7 +1659,7 @@ def createSysCfg(sysCfgPathAndName):
             section_string = ', '.join(section_list)
             if error == False:
                 error = 'Missing value or section.'
-            print section_string, ' = ', error
+            print(section_string, ' = ', error)
         sys.exit(1)
     return sysCfg
 
@@ -1764,7 +1764,7 @@ def findLinePlaneIntersection(point_0, line, planeNormal, point_1):
     numerator = dotproduct(s, planeNormal)
     denumerator = np.inner(line, planeNormal)
     if (denumerator == 0):
-        print 'No Intersection'
+        print('No Intersection')
         return None
     d = np.divide(numerator, denumerator)
     intersectionPoint = np.multiply(d, line) + point_0

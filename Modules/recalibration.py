@@ -118,7 +118,7 @@ def calcFeaturesOnScreen(sessionDict):
 
 def calcLinearHomography(sessionDict,method = cv2.LMEDS, threshold = 10):
 
-    print 'calculateLinearHomography():  Currently only reprojects  cyc gaze data'
+    print('calculateLinearHomography():  Currently only reprojects  cyc gaze data')
 
     #sessionDict['calibration']['cycEyeOnScreen']
     calibDataFrame = sessionDict['calibration']
@@ -214,7 +214,7 @@ def applyHomographyToCyc(sessionDict):
 
     reprojDf = sessionDict['processed'].apply(applyHomographyToCyc,axis=1)
 
-    print '*****applyHomographyToCyc():  Filtered data now transformed by homogrphy*****'
+    print('*****applyHomographyToCyc():  Filtered data now transformed by homogrphy*****')
 
     sessionDict['processed'][('cycFiltMetricEyeOnScreen','X')] = reprojDf['X']
     sessionDict['processed'][('cycFiltMetricEyeOnScreen','Y')] = reprojDf['Y']

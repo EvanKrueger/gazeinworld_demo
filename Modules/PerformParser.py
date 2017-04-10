@@ -152,4 +152,4 @@ def readPerformDict(filename):
 if __name__ == "__main__":
     # main(sys.argv)
     df = readPerformDict("Data/exp/exp_data-2015-9-14-14-7.dict")
-    print df.Beta
+    print(df.Beta)

@@ -23,7 +23,7 @@ def loadParameters(fileTime):
     
     if( os.getcwd().split('/')[-2] == 'flipAnalysis' ): #containingDir == 'analyzeE1' or containingDir == 'eventLabeller' ):
         
-        print '**** Loading 1 **** '
+        print('**** Loading 1 **** ')
 
         analysisParameters['filePath'] = "Data/" + fileTime + "/"
 
@@ -36,7 +36,7 @@ def loadParameters(fileTime):
 
     else:
 
-        print '**** Loading 2 **** '
+        print('**** Loading 2 **** ')
         
         analysisParameters['filePath'] = "../Data/" + fileTime + "/"
 

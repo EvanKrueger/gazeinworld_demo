@@ -64,17 +64,17 @@ def applyClassifier(sessionDict,model,winRanges):
 
         if( verbose):
 
-            print 'Features:'
-            print '  Duration: %1.2f' %(duration)
-            print '  Amplitude: %1.2f' %amplitude
-            print '  Velocity: %1.2f \n' %vel
+            print('Features:')
+            print('  Duration: %1.2f' %(duration))
+            print('  Amplitude: %1.2f' %amplitude)
+            print('  Velocity: %1.2f \n' %vel)
 
-            print 'Probabilities:'
-            print '  Saccade: %0.2f' %probs[0]
-            print '  Fixation: %0.2f' %probs[1]
-            print '  Pursuit: %0.2f \n' %probs[2]
+            print('Probabilities:')
+            print('  Saccade: %0.2f' %probs[0])
+            print('  Fixation: %0.2f' %probs[1])
+            print('  Pursuit: %0.2f \n' %probs[2])
 
-            print '** Identified as ' + catNames[group] + ' ** \n'
+            print('** Identified as ' + catNames[group] + ' ** \n')
 
         return np.array(np.hstack([group,probs]))
 
