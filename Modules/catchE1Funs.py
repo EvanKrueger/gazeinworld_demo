@@ -6,9 +6,9 @@ import numpy as np
 import Quaternion as qu
 import performFun as pF
 
-import bokeh.plotting as bkP
-import bokeh.models as bkM
-from bokeh.palettes import Spectral6
+#import bokeh.plotting as bkP
+#import bokeh.models as bkM
+#from bokeh.palettes import Spectral6
 
 def getPaddleRadius(sessionDict):
 

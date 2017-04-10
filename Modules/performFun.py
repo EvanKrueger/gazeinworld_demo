@@ -6,7 +6,7 @@ import numpy as np
 #import bokeh.models as bkM
 from scipy import signal as sig
 import catchE1Funs as expFun
-import cv2
+#import cv2
 import Quaternion as qu
 import matplotlib.pyplot as plt
 
@@ -1466,10 +1466,10 @@ def seperatePractice(sessionDf,practiceBlockIdx):
     practiceDf = pd.DataFrame()
     
     for bIdx in practiceBlockIdx:
-    	#print 'Seperating practice block: ' + str(bIdx)    
-	thisPracticeBlockDF = sessionDf[sessionDf['blockNumber']==bIdx]
-	practiceDf = pd.concat([practiceDf,thisPracticeBlockDF],axis=0)
-	sessionDf = sessionDf.drop(thisPracticeBlockDF.index)
+    	#print 'Seperating practice block: ' + str(bIdx)
+	    thisPracticeBlockDF = sessionDf[sessionDf['blockNumber']==bIdx]
+	    practiceDf = pd.concat([practiceDf,thisPracticeBlockDF],axis=0)
+	    sessionDf = sessionDf.drop(thisPracticeBlockDF.index)
         
     return sessionDf, practiceDf
 
