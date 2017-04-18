@@ -6,3 +6,6 @@
 ## Actual Project Data
 *.pickle
 *.dict 
+
+# IDE Stuff
+*.json

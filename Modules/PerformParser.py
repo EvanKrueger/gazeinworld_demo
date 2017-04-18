@@ -13,7 +13,7 @@
 ###
 
 from __future__ import division
-
+import ast
 import numpy as np
 import pandas as pd
 
@@ -21,7 +21,6 @@ import pandas as pd
 ###
 # helper functions
 ###
-
 
 def dictFileToDataFrame(filename):
     '''a simple reader for the Perform dict-log-dump'''
@@ -32,7 +31,7 @@ def dictFileToDataFrame(filename):
 
     with open(filename) as f:
         for line in f:
-            leek.append(eval(line))
+            leek.append(ast.literal_eval(line))
 
     df = pd.DataFrame(leek)
 
