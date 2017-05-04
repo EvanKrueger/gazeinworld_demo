@@ -45,7 +45,7 @@ def loadParameters(fileTime):
 
         print('**** Loading 2 **** ')
 
-        analysisParameters['filePath'] = "../Data/" + fileTime + "/"
+        analysisParameters['filePath'] = "./Data/" + fileTime + "/"
 
         if not os.path.exists('../Figures/' + fileTime):
             os.makedirs('../Figures/' + fileTime)

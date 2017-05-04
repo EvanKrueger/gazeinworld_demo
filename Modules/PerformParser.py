@@ -13,7 +13,6 @@
 ###
 
 from __future__ import division
-import ast
 import numpy as np
 import pandas as pd
 
@@ -31,7 +30,9 @@ def dictFileToDataFrame(filename):
 
     with open(filename) as f:
         for line in f:
-            leek.append(ast.literal_eval(line))
+            # TODO: remove temp change when new data is recorded
+            line = line.replace("L", "")  # replace L suffix on long datatype
+            leek.append(eval(line))
 
     df = pd.DataFrame(leek)
 
