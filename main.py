@@ -15,28 +15,38 @@ datafile = dictFileToDataFrame("data/2017-4-14-18-36/exp_data-2017-4-14-18-36.di
 
 # instantiate world
 world = World(datafile)
-world.createScene([7, 7, 7])
+world.createScene([25, 25, 25])
 
 
 if __name__ == "__main__":
+    ball = Node(datafile, "ballMat_4x4")
+    ballshape = Sphere()
+    ballshape.scale([0.5, 0.5, 0.5])
+    ballshape.transform(ball)
+
     head = Head(datafile, "viewMat_4x4")
+    headshape = Sphere()
+    headshape.transform(head)
 
-    # head shape
-    shape = Sphere()
-    shape.transform(head)
+    # L, R eye spheres
+    lefteye = Sphere()
+    lefteye.transform(head.eyeL)
+    # lefteye.scale([0.1, 0.1, 0.1])
+    righteye = Sphere()
+    righteye.transform(head.eyeR)
+    # righteye.scale([0.1, 0.1, 0.1])
 
     # gaze in head vector
-    origin, point = head.eyeC.gazeinhead(0)
-    origin = [np.average(shape.x), np.average(shape.y), np.average(shape.z)]
-    gazeIH = Vector(origin, point)
-    # gaze in head vector
-    origin, point = head.eyeC.gazeinworld(head, 0)
-    origin = [np.average(shape.x), np.average(shape.y), np.average(shape.z)]
-    gazeIW = Vector(origin, point)
-
+    point1 = head.eyeL.gaze(0, head)
+    origin = [np.average(lefteye.x), np.average(lefteye.y), np.average(lefteye.z)]
+    gazeIH = Vector(origin, point1)
+    # gaze in world vector
+    point2 = head.eyeL.gaze(0)
+    origin = [np.average(lefteye.x), np.average(lefteye.y), np.average(lefteye.z)]
+    gazeIW = Vector(origin, point2)
 
     # display
-    show(world.scene, [shape.view, gazeIW.view, gazeIH.view])
+    show(world.scene, [ballshape.view, lefteye.view, gazeIW.view])
 
-    # for col in datafile.columns:
-    #     print(col)
+    # print(head.eyeR.transform == head.eyeL.transform)
+    # print(datafile.columns)

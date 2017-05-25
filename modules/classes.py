@@ -45,14 +45,17 @@ class Transformable:
     """
 
     def __init__(self, data, key):
-        self.matricies = np.asmatrix(data[key].values)
+        # reshape Pandas series of lists into 4x4xn numpy array
+        transformData = np.concatenate([np.array(row) for row in data])
+        dims = (int(len(transformData) / 16), 4, 4)
+        self.transforms = self.transforms.reshape(dims)
         self.transform = np.eye(4)
 
     def setTransform(self, index=0):
         """
         Sets the current object-to-world transform.
         """
-        self.transform = np.asmatrix(self.matricies[0, index]).reshape(4, 4)
+        self.transform = np.asmatrix(self.transforms[0, index]).T  # column notation
 
     def getTransform(self):
         """
@@ -66,6 +69,20 @@ class Transformable:
         """
         return np.linalg.inv(self.transform)
 
+    def getposition(self):
+        """
+        Return node position as 3 element matrix.
+        Position is derived from 4x4 transform - assumes column dominant representation
+        """
+        return self.transform[:3, -1].T
+
+
+    def swapAxes(self):
+        """
+        Swaps z and y axes for plotting in Plotly from Vizard
+        """
+        pass
+
 
 class Node(Transformable):
     """
@@ -74,11 +91,10 @@ class Node(Transformable):
 
     def __init__(self, data, key):
         Transformable.__init__(self, data, key)
+        self.setTransform()
 
 
-# TODO: Get gaze point from 4x4
-# - negates getting xyz from file
-# - negates all the setting of xyz to mat
+
 class Head(Node):
     """
     Class encapsulating all head and eye information.
@@ -88,38 +104,52 @@ class Head(Node):
         """
         Class encapsulating eye-tracking information.
         Might be best to think of the eye as a vector, and not an independent node.
-
-        rightEyeBasePoint_XYZ, leftEyeBasePoint_XYZ
         """
-        # TODO: Get gaze point from 4x4 - is this possible??
-        # - negates getting xyz from file
-        # - negates all the setting of xyz to mat
 
-        def __init__(self, data, key, basepoints, gazepoints):
+        def __init__(self, data, key, gazepoints):
             Node.__init__(self, data, key)
             """
             Here key == "leftEyeInHead_XYZ", "rightEyeInHead_XYZ", or "cycEyeInHead_XYZ"
             """
-            self.basepoints = basepoints
             self.gazepoints = gazepoints
+
+        def gaze(self, index, node=None):
+            gazepoint = self.gazepoints[index]
+
+            if node:
+                gazepoint.append(1)
+                gazepoint = node.transform * np.asmatrix(gazepoint).T
+                gazepoint = gazepoint.T[0,:3].tolist()[0]
+
+            return gazepoint
+
+
+
 
         def gazeinhead(self, time):
             """
             Returns gaze point in head coordinates
             """
             gazeinhead = self.gazepoints[time]
-            return self.basepoints[time], gazeinhead
+            return gazeinhead
 
         def gazeinworld(self, refframe, time):
             """
             Returns gaze point in world frame
             """
-            gazeinhead = np.hstack(
-                (np.matrix(self.gazepoints[time]), np.matrix([1])))
-            gazeinworld = gazeinhead * refframe.transform
+            gazeinhead = np.hstack((np.matrix(self.gazepoints[time]), np.matrix([1])))
+
+            # eyeTransformInv = self.getInverseTransform()
+            refTransform = refframe.getTransform()
+
+            # gazeinworld = eyeTransformInv * refTransform * gazeinhead.T
+            gazeinworld = refTransform * gazeinhead.T
+            print(gazeinhead, gazeinworld.T)
+
+            gazeinworld = gazeinworld.T
             gazeinworld = gazeinworld[0, :3].tolist()
 
-            return self.basepoints[time], gazeinworld[0]
+            return gazeinworld[0]
 
 
     def __init__(self, data, key="viewMat_4x4", IOD=0):
@@ -129,6 +159,8 @@ class Head(Node):
         self.IOD = IOD  # static attribute (for now)
 
         # create cyc eye
-        self.eyeC = Head.Eye(data, "cycMat_4x4", data["cycEyeBasePoint_XYZ"], data["cycGazeNodeInWorld_XYZ"])
-        self.eyeL = Head.Eye(data, "leftEyeMat_4x4", data["leftEyeBasePoint_XYZ"], data["leftEyeBasePoint_XYZ"])
-        self.eyeR = Head.Eye(data, "rightEyeMat_4x4", data["rightEyeBasePoint_XYZ"], data["rightEyeBasePoint_XYZ"])
+        self.eyeC = Head.Eye(data, "cycMat_4x4", data["cycEyeInHead_XYZ"])
+
+        self.eyeL = Head.Eye(data, "leftEyeMat_4x4", data["leftEyeInHead_XYZ"])
+
+        self.eyeR = Head.Eye(data, "rightEyeMat_4x4", data["rightEyeInHead_XYZ"])
