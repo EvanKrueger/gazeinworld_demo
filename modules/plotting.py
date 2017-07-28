@@ -1,5 +1,4 @@
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-init_notebook_mode()
 import plotly.graph_objs as go
 import numpy as np
 
