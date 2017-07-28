@@ -11,6 +11,22 @@ def convert4x4(series):
     arr = np.asarray(series).reshape(4, 4)
     return arr.T
 
+def convert1x3(series):
+    """
+    Convert list to array
+    """
+    vec = np.asarray(series)
+    return vec
+
+def getPosition(Transform4D):
+    """
+    Return a Vector3D position from a 4x4 transformation matrix.
+    Note:
+            Assumes column-dominant notation for transform matrix.
+    """
+    position = Transform4D[:,-1][:-1]
+    return position
+
 
 def angularDistance(vec1, vec2):
     """
@@ -55,6 +71,9 @@ def angularError(gazePoint3D, objectPos3D):
     Calculates the angular error between a gaze vector and a known object position.
     """
     # TODO: transform object position in world frame to a head-centered frame (or) transform gaze-in-head into world coordinates before proceeding.
+    # make vectors unit length
+    gazePoint3D = gazePoint3D / np.linalg.norm(gazePoint3D)
+    objectPos3D = objectPos3D / np.linalg.norm(objectPos3D)
 
     # convert the two vectors to spherical coordinates
     gazePoint = sphericalCoordinates(gazePoint3D)
